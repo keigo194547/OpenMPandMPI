@@ -2,7 +2,7 @@
 #include <mpi.h>
 #include <stdlib.h>
 #include "math.h"
-#define N 200 // 問題サイズ
+#define N 800 // 問題サイズ
 
 int main(argc, argv)
 int argc;
@@ -66,6 +66,8 @@ char **argv;
     endTime = MPI_Wtime();
     // printf("Number of processes size : %d \n", size);
     // printf("My rank Number: %d\n", myrank);
+    printf("Nのサイズ%d\n", N);
+    printf("ノード数%d\n", size);
     printf("主要実行時間%g秒\n", matrixEndTime - matrixTime);
     printf("その他%g秒\n", (endTime - start) - (matrixEndTime - matrixTime));
     printf("実行回数%llu:\n", operatorCount);
