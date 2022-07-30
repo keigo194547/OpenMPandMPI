@@ -3,7 +3,7 @@
 #include "math.h"
 #include <omp.h>
 #include <time.h>
-#define N 100 // 問題サイズ
+#define N 800 // 問題サイズ
 
 int main(argc, argv)
 int argc;
@@ -17,8 +17,7 @@ char **argv;
   double st, ed, mainST, mainED;
   st = omp_get_wtime(); // 計測開始
 
-  int myid, nthreads;
-  nthreads = omp_get_num_threads();
+  int myid;
   // 行列・ベクトル初期化
   for (int i = 0; i < N; i++)
   {
@@ -31,17 +30,23 @@ char **argv;
 
   mainST = omp_get_wtime();
 
-#pragma omp parallel for
+#pragma omp parallel
   {
-    for (int i = 0; i < N; i++)
+    int id = omp_get_thread_num();
+    int max = omp_get_num_threads();
+    int start = id * N / max;
+    int end = (id + 1) * N / max;
+#pragma omp for
     {
-      for (int j = 0; j < N; j++)
+      for (int i = start; i < end; i++)
       {
-
-        for (int k = 0; k < N; k++)
+        for (int j = 0; j < N; j++)
         {
-          ans += A[i][k] * B[k][j];
-          operatorCount++;
+          for (int k = 0; k < N; k++)
+          {
+            ans += A[i][k] * B[k][j];
+            operatorCount++;
+          }
         }
       }
     }
@@ -58,4 +63,9 @@ char **argv;
   return 0;
 }
 
-// 153453422
+/*
+実行コマンド
+コンパイル：clang -Xpreprocessor -fopenmp -lomp myfile.cxx
+  参考リンク：https://qiita.com/ktgw0316/items/23235dd2533f488be7da
+実行時：env OMP_NUM_THREADS=2 ./a.out
+*/
