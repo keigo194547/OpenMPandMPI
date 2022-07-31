@@ -75,3 +75,13 @@ char **argv;
     MPI_Finalize();
     return 0;
 }
+
+/*
+MPI実行コマンド
+mpicc hoge.c
+mpirun -np X ./a.out
+実行時にノードが足りないときは
+mpirun --oversubscribe -np X ./a.out
+
+X：ノード数
+*/
